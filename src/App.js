@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import SearchBar from './SearchBar.js';
+import RepoList from './RepoList.js';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      repos: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch('https://api.github.com/orgs/Blizzard/repos').then(response => {
+      return response.json().then(json => {
+        console.log(json);
+      });
+    });
+  }
+
+  search = name => {
+    console.log("I'm searching! ", name);
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <h2>Blizzard Github Repos</h2>
+        </div>
+        <SearchBar onSearch={this.search} />
+        <RepoList repos={this.state.repos} />
+      </div>
+    );
+  }
 }
 
 export default App;
